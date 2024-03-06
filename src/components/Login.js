@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
+import formValidator from "../utils/validator";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
-  const handleSignUpClick = () => {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  const handleSignUpToggle = () => {
     setIsSignIn(!isSignIn);
+  };
+
+  const handleSubmitClick = () => {
+    const message = formValidator(email.current.value, password.current.value);
+    setErrorMessage(message);
   };
   return (
     <div>
@@ -19,7 +28,7 @@ const Login = () => {
         <h1 className="text-3xl font-medium mb-4">
           {isSignIn ? "Sign In" : "Create a new account"}
         </h1>
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
           {!isSignIn && (
             <input
               placeholder="Full Name"
@@ -28,22 +37,28 @@ const Login = () => {
             />
           )}
           <input
+            ref={email}
             placeholder="Email"
             type="email"
             className="py-2 px-4 my-2 w-full bg-zinc-700 rounded-md"
           />
           <input
+            ref={password}
             placeholder="Password"
             type="password"
             className="py-2 px-4 my-2 w-full bg-zinc-700 rounded-md"
           />
-          <button className="px-4 py-2 my-6 bg-red-700 w-full rounded-md">
+          <p className="text-red-600 font-medium pt-2">{errorMessage}</p>
+          <button
+            className="px-4 py-2 my-6 bg-red-700 w-full rounded-md"
+            onClick={() => handleSubmitClick()}
+          >
             {isSignIn ? "Sign In" : "Sign Up"}
           </button>
         </form>
         <p
           className="text-zinc-600 cursor-pointer"
-          onClick={() => handleSignUpClick()}
+          onClick={() => handleSignUpToggle()}
         >
           {isSignIn ? (
             <>
